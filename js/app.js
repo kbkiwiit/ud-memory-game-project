@@ -3,47 +3,118 @@ const allCards = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa f
 
 //get the deck for adding cards
 const grabDeck = document.querySelector(".deck");
+var clickedCards = [];
+var matchedCards = [];
 
-//Add the cards to the page
-for(let i = 0; i < allCards.length; i++) {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.innerHTML = `<i class="${allCards[i]}"></i>`;
-    grabDeck.appendChild(card);
-    
-    //Listen for card being clicked
-    card.addEventListener("click", function() {
-        card.classList.add("open", "show");
-    });
+//Create the cards to start the game
+function startGame() {
+    for (let i = 0; i < allCards.length; i++) {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.innerHTML = `<i class="${allCards[i]}"></i>`;
+        grabDeck.appendChild(card);
+        //Add eventlistener to each card
+        flip(card);
+    }
 }
 
-// Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+// Function called when you click on a card to flip it.
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+function flip(card) {
+        //Open cards and save to array
+        card.addEventListener("click", function() {
+
+            const firstCard = this;
+            const secondCard = clickedCards[0];
+    
+            if(clickedCards.length === 1) {
+    
+                card.classList.add("open", "show", "noclick");
+                clickedCards.push(this);
+
+                //card matching
+                checkMatch(firstCard, secondCard);
+            } 
+            
+            else {
+                card.classList.add("open", "show", "noclick");
+                clickedCards.push(this);
+            }
+        });
+}
+
+/* TO DO: fix issue where if you click fast you can open multiple cards*/
+//check if cards match
+function checkMatch(firstCard, secondCard) {
+        if(firstCard.innerHTML === secondCard.innerHTML) {
+        
+            firstCard.classList.add("match");
+            secondCard.classList.add("match");
+
+            matchedCards.push(firstCard, secondCard);
+            clickedCards = [];
+
+            gameOver();
+
+        }
+        //remove card if it doesn't match
+        else {
+
+            //show umatched cards then timeout after 1000ms
+            setTimeout(function() {
+            firstCard.classList.remove("open", "show", "noclick");
+            secondCard.classList.remove("open", "show", "noclick");
+            clickedCards = [];
+            }, 1000); 
+
+            countMoves();
+
+        }
     }
 
-    return array;
+/* TO DO: create a pop-up when the game is over */
+//Notify player that game is over when all cards are matched
+function gameOver() {
+    if(matchedCards.length === allCards.length) {
+        alert("Game Over!");
+    }
 }
 
- /*set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one) 
- */
- 
-/* 
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+//count the moves a player makes
+const numMoves = document.querySelector(".moves");
+let moves = 0;
+function countMoves() {
+    moves++;
+    numMoves.innerHTML = moves;
+}
 
+//Enable the reset button
+const resetGame = document.querySelector(".restart");
+resetGame.addEventListener("click", function() {
+    //delete all cards
+    grabDeck.innerHTML = "";
 
+    //restart the game
+    startGame();
 
+    //clear out all matched cards
+    matchedCards = [];
+});
+
+//Start the game
+startGame();
+
+// // Shuffle function from http://stackoverflow.com/a/2450976
+// function shuffle(array) {
+//     var currentIndex = array.length, temporaryValue, randomIndex;
+
+//     while (currentIndex !== 0) {
+//         randomIndex = Math.floor(Math.random() * currentIndex);
+//         currentIndex -= 1;
+//         temporaryValue = array[currentIndex];
+//         array[currentIndex] = array[randomIndex];
+//         array[randomIndex] = temporaryValue;
+//     }
+
+//     return array;
+// }
