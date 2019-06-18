@@ -64,8 +64,9 @@ function checkMatch(firstCard, secondCard) {
             setTimeout(function() {
             firstCard.classList.remove("open", "show", "noclick");
             secondCard.classList.remove("open", "show", "noclick");
-            clickedCards = [];
             }, 1000); 
+
+            clickedCards = [];
 
             countMoves();
 
@@ -82,6 +83,7 @@ function gameOver() {
 
 //count the moves a player makes
 const numMoves = document.querySelector(".moves");
+numMoves.innerHTML = 0;
 let moves = 0;
 function countMoves() {
     moves++;
@@ -99,7 +101,20 @@ resetGame.addEventListener("click", function() {
 
     //clear out all matched cards
     matchedCards = [];
+    moves = 0;
+    numMoves.innerHTML = moves;
 });
+/*
+* TO DO: Finish this part. Need to add rating to moves function.
+*/
+//change the star rating based on number of clicks
+// const rating = document.querySelector(".stars");
+// function starRating("click", function() {
+//     stars = 0;
+//     if (moves > 3) {
+//         rating.innerHTML.remove
+//     }
+// });
 
 //Start the game
 startGame();
