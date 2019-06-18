@@ -13,7 +13,7 @@ for(let i = 0; i < allCards.length; i++) {
     
     //Listen for card being clicked
     card.addEventListener("click", function() {
-        console.log(card.innerHTML);
+        card.classList.add("open", "show");
     });
 }
 
