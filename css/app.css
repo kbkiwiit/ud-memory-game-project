@@ -121,7 +121,7 @@ h1 {
 * Styles for the modal pop-up
 */
 
-/* The Modal (background) */
+/* The Modal */
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -135,7 +135,7 @@ h1 {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-/* Modal Content/Box */
+/* Modal Content */
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
@@ -164,7 +164,7 @@ h1 {
     font-size: 20px;
     font-weight: bold;
   }
-  
+
 /* TRYING TO PUT BUTTON IN DIV TO POSITION*/
 .buttdiv {
     float: right;
@@ -176,9 +176,8 @@ h1 {
     font-size: 24px;
     margin-bottom: 50px;
     float: right;
-    /* position: absolute;
     top: 50%;
-    left: 10%; */
+    left: 10%;
     text-align: center;
     cursor: pointer;
     outline: none;
