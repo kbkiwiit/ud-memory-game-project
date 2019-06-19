@@ -1,12 +1,11 @@
-//create list to hold all cards
+//create list to hold all cards.
 const allCards = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", "fa fa-bomb", "fa fa-bomb", "fa fa-bicycle", "fa fa-bicycle"]
 
-//get the deck for adding cards
+//Adding cards to the deck and starting the game.
 const grabDeck = document.querySelector(".deck");
 var clickedCards = [];
 var matchedCards = [];
 
-//Create the cards to start the game
 function startGame() {
     for (let i = 0; i < allCards.length; i++) {
         const card = document.createElement("div");
@@ -43,7 +42,6 @@ function flip(card) {
         });
 }
 
-/* TO DO: fix issue where if you click fast you can open multiple cards*/
 //check if cards match
 function checkMatch(firstCard, secondCard) {
         if(firstCard.innerHTML === secondCard.innerHTML) {
@@ -73,21 +71,15 @@ function checkMatch(firstCard, secondCard) {
         }
     }
 
-/* TO DO: create a pop-up when the game is over */
-//Notify player that game is over when all cards are matched
-function gameOver() {
-    if(matchedCards.length === allCards.length) {
-        alert("Game Over!");
-    }
-}
-
-//count the moves a player makes
+    //count the moves a player makes
 const numMoves = document.querySelector(".moves");
 numMoves.innerHTML = 0;
 let moves = 0;
 function countMoves() {
     moves++;
     numMoves.innerHTML = moves;
+
+    starRating();
 }
 
 //Enable the reset button
@@ -99,37 +91,67 @@ resetGame.addEventListener("click", function() {
     //restart the game
     startGame();
 
-    //clear out all matched cards
+    //reset all variables
     matchedCards = [];
     moves = 0;
     numMoves.innerHTML = moves;
+    rating.innerHTML = star + star + star;
 });
-/*
-* TO DO: Finish this part. Need to add rating to moves function.
-*/
+
 //change the star rating based on number of clicks
-// const rating = document.querySelector(".stars");
-// function starRating("click", function() {
-//     stars = 0;
-//     if (moves > 3) {
-//         rating.innerHTML.remove
-//     }
-// });
+const rating = document.querySelector(".stars");
+const star = '<li><i class="fa fa-star"></i></li>';
+rating.innerHTML = star + star + star;
+function starRating() {
 
-//Start the game
-startGame();
+    if (moves < 3) {
+        rating.innerHTML = star + star + star;
+    } else if(moves < 6) {
+        rating.innerHTML = star + star;
+    } else {
+        rating.innerHTML = star;
+    }
+};
 
-// // Shuffle function from http://stackoverflow.com/a/2450976
-// function shuffle(array) {
-//     var currentIndex = array.length, temporaryValue, randomIndex;
+//Start the game and shuffle the card order
+startGame(shuffle(allCards));
 
-//     while (currentIndex !== 0) {
-//         randomIndex = Math.floor(Math.random() * currentIndex);
-//         currentIndex -= 1;
-//         temporaryValue = array[currentIndex];
-//         array[currentIndex] = array[randomIndex];
-//         array[randomIndex] = temporaryValue;
-//     }
+// Shuffle function from http://stackoverflow.com/a/2450976
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
 
-//     return array;
-// }
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
+//Notify player that game is over when all cards are matched
+function gameOver() {
+    // Get the modal
+    var modal = document.getElementById("resultModal");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    if(matchedCards.length === allCards.length) {
+        modal.style.display = "block";
+        }
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+        modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+    }
+}
+//timer that runs when game starts
