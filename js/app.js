@@ -54,7 +54,7 @@ function checkMatch(firstCard, secondCard) {
 
             gameOver();
 
-        }
+        } 
         //remove card if it doesn't match
         else {
 
@@ -71,45 +71,55 @@ function checkMatch(firstCard, secondCard) {
         }
     }
 
-    //count the moves a player makes
+//count the moves a player makes
 const numMoves = document.querySelector(".moves");
 numMoves.innerHTML = 0;
 let moves = 0;
 function countMoves() {
     moves++;
     numMoves.innerHTML = moves;
-
+    
     starRating();
 }
 
 //Enable the reset button
-const resetGame = document.querySelector(".restart");
-resetGame.addEventListener("click", function() {
-    //delete all cards
-    grabDeck.innerHTML = "";
+function reset() {
+    const resetGame = document.querySelector(".restart");
+    resetGame.addEventListener("click", function() {
+        //delete all cards
+        grabDeck.innerHTML = "";
 
-    //restart the game
-    startGame();
+        //reset score
+        score.innerHTML = '';
+        timer.innerHTML = '';
+    
+        //restart the game
+        startGame();
+    
+        //reset all variables
+        matchedCards = [];
+        moves = 0;
+        numMoves.innerHTML = moves;
+        rating.innerHTML = star + star + star;
 
-    //reset all variables
-    matchedCards = [];
-    moves = 0;
-    numMoves.innerHTML = moves;
-    rating.innerHTML = star + star + star;
-});
+    });
+}
 
 //change the star rating based on number of clicks
 const rating = document.querySelector(".stars");
 const star = '<li><i class="fa fa-star"></i></li>';
 rating.innerHTML = star + star + star;
+let finalRating = 3;
 function starRating() {
 
     if (moves < 3) {
         rating.innerHTML = star + star + star;
     } else if(moves < 6) {
         rating.innerHTML = star + star;
+        finalRating--;
     } else {
         rating.innerHTML = star;
+        finalRating = 1;
     }
 };
 
@@ -134,15 +144,35 @@ function shuffle(array) {
 //Notify player that game is over when all cards are matched
 function gameOver() {
     // Get the modal
-    var modal = document.getElementById("resultModal");
+    const modal = document.getElementById("resultModal");
 
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+    const span = document.getElementsByClassName("close")[0];
 
+    //Get the play again button
+ 
+
+    //Create paragraphs for score and time to complete
+    var score = document.getElementById("score")
+    var timer = document.getElementById("timer")
+
+    var scoreText = document.createTextNode(`Your score is ${finalRating} out of 3 stars!`);
+    var timerText = document.createTextNode(`It took you ${finalRating} to complete the game!`);
+
+    //End game
     if(matchedCards.length === allCards.length) {
+        score.appendChild(scoreText);
+        timer.appendChild(timerText);
         modal.style.display = "block";
         }
-        // When the user clicks on <span> (x), close the modal
+
+        // //Add in play again button
+        document.getElementById("playAgain").onclick = function() {
+            modal.style.display = "none";
+            reset();
+        }
+
+        // When the user clicks on x, close the modal
         span.onclick = function() {
         modal.style.display = "none";
         }
@@ -152,6 +182,5 @@ function gameOver() {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
     }
-}
-//timer that runs when game starts
