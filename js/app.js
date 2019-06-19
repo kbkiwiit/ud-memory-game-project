@@ -81,6 +81,7 @@ function flip(card) {
 /*
 * CHECK IF CARDS MATCH
 */
+//TO DO: Timer restarts whenever cards are matched.
 function checkMatch(firstCard, secondCard) {
         if(firstCard.innerHTML === secondCard.innerHTML) {
         
@@ -270,7 +271,7 @@ function gameOver() {
             }
         }
 
-        //Add in play again button -- THIS DOESN'T WORK
+//TO DO: Add in play again button -- THIS DOESN'T WORK
         button.addEventListener("click",function() {
             resetDeck();
             modal.style.display = "none";
