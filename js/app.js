@@ -82,20 +82,79 @@ function countMoves() {
     starRating();
 }
 
+// //Run timer when game starts
+const timerOutput = document.querySelector(".timer");
+
+// Start timer on first click
+document.querySelector(".deck").addEventListener("click", startTimer);
+
+/* THIS SEEMS TO WORK FOR STOPPING THE TIMER AT THE MOMENT */
+document.querySelector(".restart").addEventListener("click", stopTimer);
+
+// document.querySelector(".reset-timer").addEventListener("click", () => {
+//   stopTimer();
+//   timerOutput.innerHTML = "00:00";
+// });
+
+// Timer functions
+let sec = 0;
+let min = 0;
+let timer;
+let timeRunning = false;
+let timeStopped = 0;
+
+// start the timer
+function startTimer() {
+  if (timeRunning == false) {
+    timer = setInterval(insertTime, 1000);
+    timeRunning = true;
+
+  } else {
+    return;
+  }
+}
+
+// stop the timer
+function stopTimer() {
+  clearInterval(timer);
+  sec = 0;
+  min = 0;
+  timeRunning = false;
+}
+
+// insert time into time output html
+function insertTime() {
+timeStopped = `0${min}m and ${sec}s`
+sec++;
+
+  if (sec < 10) {
+    sec = `0${sec}`;
+  }
+
+  if (sec >= 60) {
+    min++;
+    sec = "00";
+  }
+
+  // display time
+timerOutput.innerHTML = "Timer: " + "0" + min + ":" + sec;
+}
+
+/* TRY TO GET THE PLAY AGAIN BUTTON TO RESET THE GAME */
 //Enable the reset button
 function reset() {
-    const resetGame = document.querySelector(".restart");
-    resetGame.addEventListener("click", function() {
+    document.getElementById("restart").addEventListener("click", function() {
+
         //delete all cards
         grabDeck.innerHTML = "";
 
         //reset score
         score.innerHTML = '';
         timer.innerHTML = '';
-    
+
         //restart the game
         startGame();
-    
+
         //reset all variables
         matchedCards = [];
         moves = 0;
@@ -103,6 +162,10 @@ function reset() {
         rating.innerHTML = star + star + star;
 
     });
+/* NEED TO TRY TO RESET THE GAME AND THE TIMER AT THE SAME TIME */
+    // document.querySelector(".restart").addEventListener("click", stopTimer);
+    // stopTimer();
+    // timerOutput.innerHTML = "00:00";
 }
 
 //change the star rating based on number of clicks
@@ -112,9 +175,9 @@ rating.innerHTML = star + star + star;
 let finalRating = 3;
 function starRating() {
 
-    if (moves < 3) {
+    if (moves < 5) {
         rating.innerHTML = star + star + star;
-    } else if(moves < 6) {
+    } else if(moves < 10) {
         rating.innerHTML = star + star;
         finalRating--;
     } else {
@@ -154,15 +217,15 @@ function gameOver() {
 
     //Create paragraphs for score and time to complete
     var score = document.getElementById("score")
-    var timer = document.getElementById("timer")
+    var timed = document.getElementById("timeTaken")
 
     var scoreText = document.createTextNode(`Your score is ${finalRating} out of 3 stars!`);
-    var timerText = document.createTextNode(`It took you ${finalRating} to complete the game!`);
+    var timedText = document.createTextNode(`It took you ${timeStopped} to complete the game!`);
 
     //End game
     if(matchedCards.length === allCards.length) {
         score.appendChild(scoreText);
-        timer.appendChild(timerText);
+        timed.appendChild(timedText);
         modal.style.display = "block";
         }
 
