@@ -3,7 +3,10 @@
 */
 
 //create list to hold all cards.
-const allCards = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", "fa fa-bomb", "fa fa-bomb", "fa fa-bicycle", "fa fa-bicycle"]
+const allCards = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o",
+                 "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", 
+                 "fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", 
+                 "fa fa-bomb", "fa fa-bomb", "fa fa-bicycle", "fa fa-bicycle"]
 
 //Adding cards to the deck and starting the game.
 const grabDeck = document.querySelector(".deck");
@@ -26,11 +29,13 @@ const star = '<li><i class="fa fa-star"></i></li>';
 
 //Timer
 const timerOutput = document.querySelector(".timer");
+let firstClick = true;
 
 //Modal
 var modal = document.getElementById("resultModal");
 var span = document.getElementsByClassName("close")[0];
-var button = document.getElementById("playAgain");
+var buttonYes = document.getElementById("playAgain");
+var buttonNo = document.getElementById("playAgainNo");
 
 //Scoring
 var score = document.getElementById("score")
@@ -56,25 +61,31 @@ function startGame() {
 */
 
 function flip(card) {
-        //Open cards and save to array
-        card.addEventListener("click", function() {
+    //Open cards and save to array
+    card.addEventListener("click", function() {
 
-            const firstCard = this;
-            const secondCard = clickedCards[0];
-    
-            if(clickedCards.length === 1) {
-    
-                card.classList.add("open", "show", "noclick");
-                clickedCards.push(this);
+        //Check if this is the first click and start timer
+        if(firstClick == true) {
+            startTimer()
+            firstClick = false;
+        }
 
-                //card matching
-                checkMatch(firstCard, secondCard);
-            } 
-            
-            else {
-                card.classList.add("open", "show", "noclick");
-                clickedCards.push(this);
-            }
+        const firstCard = this;
+        const secondCard = clickedCards[0];
+
+        if(clickedCards.length === 1) {
+
+            card.classList.add("open", "show", "noclick");
+            clickedCards.push(this);
+
+            //card matching
+            checkMatch(firstCard, secondCard);
+        } 
+        
+        else {
+            card.classList.add("open", "show", "noclick");
+            clickedCards.push(this);
+        }
         });
 }
 
@@ -83,31 +94,30 @@ function flip(card) {
 */
 //TO DO: Timer restarts whenever cards are matched.
 function checkMatch(firstCard, secondCard) {
-        if(firstCard.innerHTML === secondCard.innerHTML) {
-        
-            firstCard.classList.add("match");
-            secondCard.classList.add("match");
+    if(firstCard.innerHTML === secondCard.innerHTML) {
+    
+        firstCard.classList.add("match");
+        secondCard.classList.add("match");
 
-            matchedCards.push(firstCard, secondCard);
-            clickedCards = [];
+        matchedCards.push(firstCard, secondCard);
+        clickedCards = [];
 
-            gameOver();
-        } 
-        //remove card if it doesn't match
-        else {
-
+        gameOver();
+    } 
+    //remove card if it doesn't match
+    else {
         //show umatched cards then timeout after 1000ms
-            setTimeout(function() {
-            firstCard.classList.remove("open", "show", "noclick");
-            secondCard.classList.remove("open", "show", "noclick");
-            }, 1000); 
+        setTimeout(function() {
+        firstCard.classList.remove("open", "show", "noclick");
+        secondCard.classList.remove("open", "show", "noclick");
+        }, 1000); 
 
-            clickedCards = [];
+        clickedCards = [];
 
-            countMoves();
+        countMoves();
 
-        }
-    }
+    }   
+}
 
 
 /*
@@ -115,7 +125,7 @@ function checkMatch(firstCard, secondCard) {
 */
 
 //Start timer
-document.querySelector(".deck").addEventListener("click", startTimer);
+// document.querySelector(".deck").addEventListener("click", startTimer);
 
 // Timer functions
 let sec = 0;
@@ -126,69 +136,56 @@ let timeStopped = 0;
 
 // start the timer
 function startTimer() {
-  if (timeRunning == false) {
-    timer = setInterval(insertTime, 1000);
-    timeRunning = true;
+    if (timeRunning == false) {
+        timer = setInterval(insertTime, 1000);
+        timeRunning = true;
 
-  } else {
-    return;
-  }
+    } else {
+        return;
+    }
 }
 
 // stop the timer
 function stopTimer() {
-  clearInterval(timer);
-  sec = 0;
-  min = 0;
-  timeRunning = false;
+    clearInterval(timer);
+    sec = 0;
+    min = 0;
+    timeRunning = false;
 }
 
 // insert time into time output html
 function insertTime() {
-sec++;
+    sec++;
 
-  if (sec < 10) {
-    sec = `0${sec}`;
-  }
+    if (sec < 10) {
+        sec = `0${sec}`;
+    }
 
-  if (sec >= 60) {
-    min++;
-    sec = "00";
-  }
+    if (sec >= 60) {
+        min++;
+        sec = "00";
+    }
 
   // Output time
-timerOutput.innerHTML = "Timer: " + "0" + min + ":" + sec;
-timeStopped = `0${min}m and ${sec}s`
+    timerOutput.innerHTML = "Timer: 0" + min + ":" + sec;
+    timeStopped = `0${min}m and ${sec}s`
 }
-
 
 /**
  *  RESTART THE GAME
  */
-//TO DO: This doesn't work, but if I take it out of the function it does work. Want to call from button below.
-function resetDeck() {
-    restart.addEventListener("click", function() {
-        stopTimer();
-        timerOutput.innerHTML = "00:00";
+restart.addEventListener("click", function() {
+    //stop the timer
+    stopTimer();
 
-        //delete all cards
-        grabDeck.innerHTML = "";
+    //reset all variables
+    resetVars();
 
-        //reset score
-        score.innerHTML = '';
-        timed.innerHTML = '';
-
-        //restart the game
-        startGame();
-
-        //reset all variables
-        matchedCards = [];
-        moves = 0;
-        numMoves.innerHTML = moves;
-        rating.innerHTML = star + star + star;
+    //restart the game
+    startGame();
 
     });
-}
+    
     /*
 * COUNT NUMBER OF MOVES
 */
@@ -254,11 +251,11 @@ function gameOver() {
         score.appendChild(scoreText);
         timed.appendChild(timedText);
         modal.style.display = "block";
-        }
 
         stopTimer();
-        timerOutput.innerHTML = "00:00";
-        
+
+        }
+      
         // When the user clicks on x, close the modal
         span.onclick = function() {
         modal.style.display = "none";
@@ -271,9 +268,38 @@ function gameOver() {
             }
         }
 
-//TO DO: Add in play again button -- THIS DOESN'T WORK
-        button.addEventListener("click",function() {
-            resetDeck();
+        //Yes button to play again
+        buttonYes.addEventListener("click",function() {
             modal.style.display = "none";
+            resetVars();
+            startGame();
+
         });
+
+        //Yes button to play again
+        buttonNo.addEventListener("click",function() {
+            modal.style.display = "none";
+
+        });
+        
+    }
+
+//Clear Variables
+
+function resetVars() {
+            //delete all cards
+            grabDeck.innerHTML = "";
+
+            //reset score
+            score.innerHTML = '';
+            timed.innerHTML = '';
+    
+            //reset all variables
+            matchedCards = [];
+            moves = 0;
+            numMoves.innerHTML = moves;
+            rating.innerHTML = star + star + star;
+    
+            timerOutput.innerHTML = "Timer: 00:00";
+            firstClick = true;
     }
