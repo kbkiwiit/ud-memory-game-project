@@ -66,7 +66,7 @@ function flip(card) {
 
         //Check if this is the first click and start timer
         if(firstClick == true) {
-            startTimer()
+            startTimer();
             firstClick = false;
         }
 
@@ -168,7 +168,7 @@ function insertTime() {
 
   // Output time
     timerOutput.innerHTML = "Timer: 0" + min + ":" + sec;
-    timeStopped = `0${min}m and ${sec}s`
+    timeStopped = `0${min}m and ${sec}s`;
 }
 
 /**
@@ -185,7 +185,7 @@ restart.addEventListener("click", function() {
     startGame();
 
     });
-    
+
     /*
 * COUNT NUMBER OF MOVES
 */
